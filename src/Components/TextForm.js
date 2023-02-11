@@ -1,68 +1,69 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
-export default function TextForm(props) {
-  const [text, setText] = useState("");
+const TextForm = (props) => {
+  const [text,setText] = useState("");
 
-  const Change = (event) => {
-    setText(event.target.value);
-  };
+  const change = (e)=>{
+    setText(e.target.value);
+  }
 
-  const Speak = () => {
-    const voice = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(voice);
-  };
+  const clickUp = ()=>{
+    setText(text.toUpperCase());
+    props.showAlert("Converted to Uppercase !!!!","success");
+  }
 
-  const Copy = () => {
-    navigator.clipboard.writeText(text);
-    document.getSelection().removeAllRanges();
-    props.showAlert("Copied to Clipboard", "success");
-  };
+  const clickLo = ()=>{
+    setText(text.toLowerCase());
+    props.showAlert("Converted to Lowercase !!!!","success");
+  }
 
-  const Clear = () => {
-    setText("");
-    props.showAlert("The Text has been Cleared Successfully", "success");
-  };
+  const Speak = ()=>{
+    let voice = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(voice);
+  }
 
-  const ClickUp = () => {
-    let newtext = text.toUpperCase();
-    setText(newtext);
-    props.showAlert("The Text has been Converted to Uppercase Successfully", "success");
-  };
-
-  const ClickLo = () => {
-    let newtext = text.toLowerCase();
-    setText(newtext);
-    props.showAlert("The Text has been Converted to Lowercase Successfully", "success");
-  };
-
-  const Space = () => {
-    let space = text.split(' ').filter(word => word).join(' ');
+  const Space = ()=>{
+    let space = text.split(" ").filter(word => word).join(" ");
     setText(space);
+    props.showAlert("Removed the Extra Spaces !!!!","success");
+  }
+
+  const Copy = ()=>{
+    navigator.clipboard.writeText(text).then(()=>{
+      props.showAlert("Copied the Text !!!!","success");
+    }, ()=>{
+      props.showAlert("Failed to copy the Text","danger");
+    })
+  }
+
+  const Clear = ()=>{
+    setText("");
+    props.showAlert("Clear the Text !!!!","success");
   }
 
   return (
-    <>
-      <div className="container my-3" style={{ color: props.mode === "dark" ? "white" : "black" }}>
-        <h1 className="text-center mb-4">Type your Text here and Analyze them</h1>
-        <div className="mb-3">
-          <textarea className="form-control" value={text} onChange={Change} id="exampleFormControlTextarea1" rows="10" placeholder="Enter your Text"></textarea>
-        </div>
-        <div className="my-1 text-center">
-          <button type="button" disabled={text.length === 0} onClick={ClickUp} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`}>Uppercase</button>
-          <button type="button" disabled={text.length === 0} onClick={ClickLo} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`}>Lowercase</button>
-          <button type="button" disabled={text.length === 0} onClick={Speak} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`} >Text to Speech </button>
-          <button type="button" disabled={text.length === 0} onClick={Space} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`}>Remove Extra Spaces</button>
-          <button type="button" disabled={text.length === 0} onClick={Copy} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`} > Copy Text </button>
-          <button type="button" disabled={text.length === 0} onClick={Clear} className={`btn btn-${props.mode === "dark" ? "light" : "primary"} mx-1 my-1`}>Clear Text</button>
-        </div>
-        <div className="my-3">
-          <h2>Word Summary</h2>
-          <p>No of Words :{" "}<b>{text.split(/\s+/).filter((word) => word.length !== 0).length}</b> and No of Characters : <b>{text.trim().length}</b></p>
-          <p>Minutes required to Read : <b>{0.008 * text.split(" ").filter((word) => word.length !== 0).length}</b></p>
-          <h2>Preview</h2>
-          <p>{text.length > 0 ? text : "Nothing to Preview !!!"}</p>
-        </div> 
+    <div className='container my-3'>
+      <h1 className='text-center'>Type your Text here and Analyze them</h1>
+      <div className="mb-3 my-4">
+        <textarea className="form-control" id="exampleFormControlTextarea1" rows="10" placeholder='Enter your Text' value={text} onChange={change}></textarea>
       </div>
-    </>
-  );
+      <div className='text-center'>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={clickUp}>Uppercase</button>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={clickLo}>Lowercase</button>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={Speak}>Text to Speech</button>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={Space}>Remove Extra Spaces</button>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={Copy}>Copy Text</button>
+        <button disabled={text.length === 0} className={`btn btn-${props.mode === 'dark' ? 'light' : "primary"} mx-1 my-1`} onClick={Clear}>Clear Text</button>
+      </div>
+      <div>
+        <h2>Word Summary</h2>
+        <p>No of Words : <b>{text.split(/\s+/).filter((word) => word.length !== 0).length}</b> and No of Characters : <b>{text.trim().length}</b></p>
+        <p>Minutes required to Read : <b>{0.008 * text.split(/\s+/).filter((word) => word.length !== 0).length}</b></p>
+        <h2>Preview</h2>
+        <p>{text.length === 0 ? "Nothing to Preview !!!" : text}</p>
+      </div>
+    </div>
+  )
 }
+
+export default TextForm

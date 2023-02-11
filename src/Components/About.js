@@ -2,14 +2,15 @@ import React from "react";
 import "../App.css";
 
 export default function About(props) {
-  let myStyle = {
-    color : props.mode === 'dark' ? 'white' : 'rgb(49, 49, 49)' ,
-    backgroundColor : props.mode === 'dark' ?'rgb(49, 49, 49)'  :  'white',
-    transition : "all 0.4s ease"
+  const myStyle = {
+    color: props.mode === 'dark' ? 'white' : "#383838",
+    backgroundColor : props.mode === 'dark' ? '#383838' : "white",
+    transition : "all 0.3s ease"
   }
+  
   return (
     <div className="container my-3">
-      <h1 className="text-center" style={{color : props.mode === 'dark' ? 'white' : 'rgb(49, 49, 49)'}}>About us</h1>
+      <h1 className="text-center my-3">About us</h1>
       <div className="accordion" id="accordionExample">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
